@@ -23,10 +23,16 @@ body[data-temp-range="hot"] {
 }
 
 body {
+  height: 100vh;
+  margin: 0;
+  padding: 0;
   font-family: "Rubik", sans-serif;
   font-weight: 300;
   color: #767386;
-  background: var(--background);
+  background-color: var(--background);
+  background-size: cover;
+  background-position: center center;
+  background-repeat: no-repeat;
 }
 
 strong {
@@ -145,6 +151,7 @@ form button:hover {
 #today {
   display: flex;
   flex-wrap: nowrap;
+  border-bottom: 1px solid #efefef;
 }
 
 .today-image-wrap {
@@ -205,7 +212,6 @@ form button:hover {
 }
 
 #forecast {
-  margin-top: 0.5rem;
   display: flex;
   flex-wrap: nowrap;
   justify-content: space-between;
@@ -214,12 +220,35 @@ form button:hover {
 }
 
 .forecast-item {
-  min-height: 80px;
-  flex-grow: 1;
-  padding: 0.5rem;
+  padding: 0 0.5rem;
+  text-align: center;
 }
 
-.forecast-item-inner {
-  border: 1px solid #272b38;
-  height: 100%;
+.forecast-item img {
+  width: 80px;
+  display: block;
+  margin: 0 auto;
+}
+
+.forecast-item-min,
+.forecast-item-max {
+  display: inline-block;
+  padding: 0.25rem;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+.forecast-item-min strong,
+.forecast-item-max strong {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 1rem;
+}
+
+.forecast-item-min strong {
+  color: var(--secondary);
+}
+
+.forecast-item-max strong {
+  color: var(--primary);
 }

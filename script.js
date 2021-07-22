@@ -49,6 +49,12 @@ document.addEventListener("DOMContentLoaded", function () {
         populateCityName(data.name);
         populateWeather(data);
         updateStyling(data.main.temp);
+        getForecastForCity(data.coord.lat, data.coord.lon).then((forecast) => {
+          populateForecast(forecast);
+        });
+        getPhotosForCity(city).then((images) => {
+          updateBackground(images);
+        });
       })
       .catch((error) => {
         alert(
@@ -121,6 +127,24 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   /**
+   * Query the API to get forecast - requires coordinates
+   * @param city
+   * @returns {Promise}
+   */
+  async function getForecastForCity(lat, lng) {
+    const query = `https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lng}&appid=${apiKey}&units=metric&exclude=current,hourly,minutely,alerts`;
+
+    // Query the API, which returns a promise
+    // Using .then, create a new promise which extracts the data
+    // Ref: https://stackoverflow.com/a/48980526
+    if (query) {
+      return axios.get(query).then((response) => {
+        return response.data;
+      });
+    }
+  }
+
+  /**
    * Load current day and time
    */
   function populateDayAndTime() {
@@ -155,7 +179,6 @@ document.addEventListener("DOMContentLoaded", function () {
    * @param data
    */
   function populateWeather(data) {
-    console.log(data);
     let image = document.querySelector(".today-image");
     let tempText = document.querySelector(".today-temp .amount");
     let descText = document.querySelector(".today-description");
@@ -171,6 +194,43 @@ document.addEventListener("DOMContentLoaded", function () {
     descText.innerHTML = data.weather[0].description;
     humidityText.innerHTML = data.main.humidity;
     windText.innerHTML = data.wind.speed;
+  }
+
+  /**
+   * Load the forecast data onto the page
+   * @param data
+   */
+  function populateForecast(data) {
+    const boxes = document.querySelectorAll(".forecast-item");
+
+    // Loop through the forecast boxes on the page, and add the relevant data from the corresponding data array item
+    for (let i = 0; i < boxes.length; i++) {
+      let min = Math.round(data["daily"][i].temp.min);
+      let max = Math.round(data["daily"][i].temp.max);
+      let icon = data["daily"][i].weather[0].icon;
+
+      boxes[i].innerHTML = `
+				<img src="http://openweathermap.org/img/wn/${icon}@2x.png" alt=""/>
+				<span class="forecast-item-min">Low<strong>${min}&deg;</strong></span>
+				<span class="forecast-item-max">High<strong>${max}&deg;</strong></span>
+			`;
+    }
+  }
+
+  /**
+   * Query Wikimedia Commons for an image
+   * @param city
+   * @returns {Promise}
+   */
+  async function getPhotosForCity(city) {
+    const query = `https://commons.wikimedia.org/w/api.php?action=query&prop=images&imlimit=500&redirects=1&titles=${city}&origin=*&format=json`;
+
+    return axios.get(query).then((response) => {
+      // The key that the images are under varies for each city,
+      // so dig down to the right object and use Object.entries to find the images so that the city key doesn't matter
+      let object = response.data.query.pages;
+      return Object.entries(object)[0][1].images;
+    });
   }
 
   /**
@@ -191,6 +251,34 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     document.body.setAttribute("data-temp-range", tempRange);
+  }
+
+  /**
+   * Update the background with a random image from the result of a Wikimedia Commons API query
+   * @param images
+   */
+  function updateBackground(images) {
+    let randomIndex = getRandomInt(0, images.length);
+    let imageFile = images[randomIndex].title
+      .replace("File:", "")
+      .replace(/ /g, "_");
+    let imageHash = CryptoJS.MD5(imageFile).toString();
+
+    // Build the URL from the file information
+    // Ref: https://stackoverflow.com/a/33691240
+    let url = `https://upload.wikimedia.org/wikipedia/commons/${imageHash.charAt(
+      0
+    )}/${imageHash.charAt(0)}${imageHash.charAt(1)}/${imageFile}`;
+
+    // Update the background with CSS
+    document.body.style.backgroundImage = `url(${url})`;
+
+    // Utility function to get a random index for a random image in an array
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
   }
 
   /**
