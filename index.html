@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>SheCodes Plus</title>
+    <link rel="stylesheet" type="text/css" href="reset.css" />
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Rubik:wght@300;500&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script type="text/javascript" src="script.js"></script>
+  </head>
+  <body>
+    <main id="weather">
+      <section class="row">
+        <form id="search-form">
+          <label for="search" class="visually-hidden">Search for a city</label>
+          <input
+            id="search"
+            type="search"
+            name="search"
+            placeholder="Search for a city"
+          />
+          <button type="submit">
+            <span class="visually-hidden">Search</span>
+            <span class="material-icons">search</span>
+          </button>
+        </form>
+      </section>
+      <section class="row">
+        <h1>Today in <strong id="city-name"></strong></h1>
+      </section>
+      <section class="row">
+        <div id="today">
+          <div class="today-text">
+            <span class="today-time"></span>
+            <a class="today-temp">
+              <div class="today-image-wrap">
+                <img class="today-image" alt="" />
+              </div>
+              <span class="amount" data-temp-amount=""></span>&deg;<span
+                class="units"
+                data-temp-units="C"
+                >C</span
+              >
+            </a>
+            <ul class="today-details">
+              <li><span class="today-description"></span></li>
+              <li>Humidity: <span class="today-humidity"></span>%</li>
+              <li>Wind: <span class="today-wind"></span>km/h</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="row">
+        <h2>This Week</h2>
+        <div id="forecast">
+          <div class="forecast-item">
+            <div class="forecast-item-inner"></div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-item-inner"></div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-item-inner"></div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-item-inner"></div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-item-inner"></div>
+          </div>
+          <div class="forecast-item">
+            <div class="forecast-item-inner"></div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
